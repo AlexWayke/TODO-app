@@ -5,9 +5,9 @@
   },
   "ignorePatterns": ["node_modules", "dist", "build"],
   "extends": [
+    "eslint:recommended",
     "airbnb",
     "airbnb/hooks",
-    "eslint:recommended",
     "plugin:react/recommended",
     "plugin:react-hooks/recommended",
     "plugin:import/errors",
