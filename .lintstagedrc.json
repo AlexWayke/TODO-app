@@ -1,6 +1,7 @@
 {
   "*.js": [
     "npm run lint:fix",
-    "dit add"
+    "npm run format",
+    "git add"
   ]
 }

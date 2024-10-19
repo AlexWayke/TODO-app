@@ -43,9 +43,7 @@ function App() {
   };
 
   const changeTaskState = (id) => {
-    const updatedTasks = tasks.map((task) => {
-      return task.id === id ? { ...task, isDone: !task.isDone } : task;
-    });
+    const updatedTasks = tasks.map((task) => (task.id === id ? { ...task, isDone: !task.isDone } : task));
     setTasks(updatedTasks);
   };
 
@@ -60,9 +58,7 @@ function App() {
       return updTask;
     });
 
-    const updFilters = filters.map((filter) => {
-      return { ...filter, isActive: filter.name === cond };
-    });
+    const updFilters = filters.map((filter) => ({ ...filter, isActive: filter.name === cond }));
 
     setFilters(updFilters);
     setTasks(filteredTasks);
