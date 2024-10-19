@@ -5,14 +5,14 @@
   },
   "ignorePatterns": ["node_modules", "dist", "build"],
   "extends": [
+    "eslint:recommended",
     "airbnb",
     "airbnb/hooks",
-    "eslint:recommended",
     "plugin:react/recommended",
-    "plugin:prettier/recommended",
     "plugin:react-hooks/recommended",
     "plugin:import/errors",
-    "plugin:import/warnings"
+    "plugin:import/warnings",
+    "prettier"
   ],
   "parserOptions": {
     "ecmaFeatures": {
@@ -21,10 +21,9 @@
     "ecmaVersion": 12,
     "sourceType": "module"
   },
-  "plugins": ["react", "prettier", "import"],
+  "plugins": ["react", "import"],
   "rules": {
     "indent": ["error", 2],
-    "prettier/prettier": "error",
     "linebreak-style": [0, "unix"],
     "quotes": ["error", "single"],
     "react/react-in-jsx-scope": "off",
