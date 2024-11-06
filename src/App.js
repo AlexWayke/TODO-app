@@ -26,6 +26,7 @@ function App() {
       id: maxId,
       hide: currentFilter.name === 'Completed',
       date: createdDate,
+      play: false,
     };
 
     setMaxId(maxId + 1);
@@ -44,6 +45,11 @@ function App() {
 
   const changeTaskState = (id) => {
     const updatedTasks = tasks.map((task) => (task.id === id ? { ...task, isDone: !task.isDone } : task));
+    setTasks(updatedTasks);
+  };
+
+  const togglePlayState = (id) => {
+    const updatedTasks = tasks.map((task) => (task.id === id ? { ...task, play: !task.play } : task));
     setTasks(updatedTasks);
   };
 
@@ -68,7 +74,7 @@ function App() {
     <section className="todoapp">
       <NewTaskForm addTask={addTask} />
       <section className="main">
-        <TaskList tasks={tasks} removeTask={removeTask} changeTaskState={changeTaskState} />
+        <TaskList tasks={tasks} removeTask={removeTask} changeTaskState={changeTaskState} play={togglePlayState} />
         <Footer
           filters={filters}
           filterTasks={filterTasks}

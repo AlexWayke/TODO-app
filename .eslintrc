@@ -8,10 +8,6 @@
     "eslint:recommended",
     "airbnb",
     "airbnb/hooks",
-    "plugin:react/recommended",
-    "plugin:react-hooks/recommended",
-    "plugin:import/errors",
-    "plugin:import/warnings",
     "prettier"
   ],
   "parserOptions": {
