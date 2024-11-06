@@ -1,5 +1,3 @@
-import './new-task-form.css';
-
 function NewTaskForm({ addTask }) {
   return (
     <header className="header">

@@ -1,9 +1,22 @@
-import './task.css';
 import { formatDistanceToNowStrict } from 'date-fns';
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 function Task({ data, removeTask, changeTaskState }) {
   const { description, isDone, id, hide, date } = data;
+  const [timer, setTimer] = useState(0);
+  const [play, setPlay] = useState(false);
+
+  useEffect(() => {
+    const timerCheck = setInterval(() => {
+      if (play && !isDone) {
+        setTimer(timer + 1);
+      }
+    }, 1000);
+
+    return () => clearInterval(timerCheck);
+  }, [timer, play, isDone]);
+
   return (
     <li className={(isDone ? 'completed ' : '') + (hide ? 'hidden ' : '')}>
       <div className="view">
@@ -15,9 +28,14 @@ function Task({ data, removeTask, changeTaskState }) {
           defaultChecked={isDone}
           onChange={() => changeTaskState(id)}
         />
-        <label htmlFor={id}>
-          <span className="description">{description}</span>
-          <span className="created">created {formatDistanceToNowStrict(date)} ago</span>
+        <label aria-label="input" htmlFor={id}>
+          <span className="title">{description}</span>
+          <span className="description">
+            <button type="submit" aria-label="Play" className="icon icon-play" onClick={() => setPlay(true)} />
+            <button type="submit" aria-label="Pause" className="icon icon-pause" onClick={() => setPlay(false)} />
+            <p>{timer}</p>
+          </span>
+          <span className="description">created {formatDistanceToNowStrict(date)} ago</span>
         </label>
         <button type="submit" aria-label="Edit" className="icon icon-edit" />
         <button type="submit" aria-label="Delete" className="icon icon-destroy" onClick={() => removeTask(id)} />

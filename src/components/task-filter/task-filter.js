@@ -1,4 +1,3 @@
-import './task-filter.css';
 import PropTypes from 'prop-types';
 
 function TaskFilter({ filters, filterTasks }) {

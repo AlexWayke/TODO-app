@@ -1,4 +1,3 @@
-import './task-list.css';
 import PropTypes from 'prop-types';
 
 import Task from '../task';
