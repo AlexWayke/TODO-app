@@ -1,4 +1,4 @@
-import { formatDistanceToNowStrict } from 'date-fns';
+import { formatDistanceToNowStrict, intervalToDuration } from 'date-fns';
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
@@ -6,6 +6,9 @@ function Task({ data, removeTask, changeTaskState }) {
   const { description, isDone, id, hide, date } = data;
   const [timer, setTimer] = useState(0);
   const [play, setPlay] = useState(false);
+
+  const minutes = intervalToDuration({ start: 0, end: timer * 1000 });
+  const formatted = `${minutes.minutes || 0}:${minutes.seconds || '00'}`;
 
   useEffect(() => {
     const timerCheck = setInterval(() => {
@@ -33,7 +36,7 @@ function Task({ data, removeTask, changeTaskState }) {
           <span className="description">
             <button type="submit" aria-label="Play" className="icon icon-play" onClick={() => setPlay(true)} />
             <button type="submit" aria-label="Pause" className="icon icon-pause" onClick={() => setPlay(false)} />
-            <p>{timer}</p>
+            <p>{formatted}</p>
           </span>
           <span className="description">created {formatDistanceToNowStrict(date)} ago</span>
         </label>
