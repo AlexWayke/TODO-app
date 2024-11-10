@@ -3,17 +3,18 @@ import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 function Task({ data, removeTask, changeTaskState }) {
-  const { description, isDone, id, hide, date } = data;
-  const [timer, setTimer] = useState(0);
+  const { description, isDone, id, hide, date, timerValue } = data;
+  const [timer, setTimer] = useState(timerValue);
   const [play, setPlay] = useState(false);
 
   const minutes = intervalToDuration({ start: 0, end: timer * 1000 });
-  const formatted = `${minutes.minutes || 0}:${minutes.seconds || '00'}`;
+  const formatTime = (num) => (num > 9 ? num : `0${num}`);
+  const formatted = `${minutes.minutes || 0}:${minutes.seconds ? formatTime(minutes.seconds) : '00'}`;
 
   useEffect(() => {
     const timerCheck = setInterval(() => {
-      if (play && !isDone) {
-        setTimer(timer + 1);
+      if (play && !isDone && timer > 0) {
+        setTimer(timer - 1);
       }
     }, 1000);
 
