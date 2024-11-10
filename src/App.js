@@ -17,15 +17,18 @@ function App() {
 
   const tasksToDo = tasks.filter((task) => !task.isDone);
 
-  const addTask = (title) => {
+  const addTask = (task) => {
     const currentFilter = filters[filters.findIndex((filter) => filter.isActive)];
     const createdDate = new Date();
+    const min = task.min ? task.min * 60 : 0;
+    const sec = task.sec ? task.sec : 0;
     const newTask = {
-      description: title,
+      description: task.title,
       isDone: false,
       id: maxId,
       hide: currentFilter.name === 'Completed',
       date: createdDate,
+      timerValue: min + sec,
       play: false,
     };
 
