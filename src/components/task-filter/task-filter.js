@@ -1,10 +1,12 @@
 import PropTypes from 'prop-types';
 
-function TaskFilter({ filters, filterTasks }) {
+function TaskFilter({ currentFilter, setFilter }) {
+  const filters = ['All', 'Active', 'Completed'];
+
   const listFilters = filters.map((filter) => (
-    <li key={filter.name}>
-      <button className={filter.isActive ? 'selected' : ''} type="submit" onClick={() => filterTasks(filter.name)}>
-        {filter.name}
+    <li key={filter}>
+      <button className={currentFilter === filter ? 'selected' : ''} type="submit" onClick={() => setFilter(filter)}>
+        {filter}
       </button>
     </li>
   ));
@@ -13,13 +15,8 @@ function TaskFilter({ filters, filterTasks }) {
 }
 
 TaskFilter.propTypes = {
-  filters: PropTypes.arrayOf(
-    PropTypes.shape({
-      name: PropTypes.string,
-      isActive: PropTypes.bool,
-    })
-  ).isRequired,
-  filterTasks: PropTypes.func.isRequired,
+  currentFilter: PropTypes.string.isRequired,
+  setFilter: PropTypes.func.isRequired,
 };
 
 export default TaskFilter;

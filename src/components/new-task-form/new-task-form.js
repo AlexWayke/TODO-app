@@ -1,42 +1,35 @@
 import { useState } from 'react';
+import PropTypes from 'prop-types';
 
 function NewTaskForm({ addTask }) {
-  const [data, setData] = useState({});
   const [title, setTitle] = useState('');
-  const [min, setMin] = useState('');
   const [sec, setSec] = useState('');
+  const [min, setMin] = useState('');
 
   const addTaskForm = (event) => {
     event.preventDefault();
-    if (data.title && event.key === 'Enter') {
+
+    if (title && event.key === 'Enter') {
+      addTask({
+        title: title,
+        sec: min * 60 + sec,
+      });
+
       setTitle('');
       setMin('');
       setSec('');
-      setData({});
-      addTask(data);
     }
   };
 
-  const handleInput = (inputName, inputValue) => {
-    let input = inputValue;
-
-    if (inputName === 'sec') {
-      input = Number.isNaN(parseInt(input, 10)) ? sec : parseInt(input, 10);
-      input = inputValue === '' ? '' : input;
-      input = input > 60 ? 60 : input;
-      setSec(input);
-    } else if (inputName === 'min') {
-      input = Number.isNaN(parseInt(input, 10)) ? min : parseInt(input, 10);
-      input = inputValue === '' ? '' : input;
-      setMin(input);
+  const handleInputTime = (flag, inputVal) => {
+    let time = Number.isNaN(parseInt(inputVal, 10)) ? sec : parseInt(inputVal, 10);
+    time = time > 60 ? 60 : time;
+    time = inputVal === '' ? '' : time;
+    if (flag === 'min') {
+      setMin(time);
     } else {
-      setTitle(input);
+      setSec(time);
     }
-
-    setData({
-      ...data,
-      [inputName]: input,
-    });
   };
 
   return (
@@ -48,21 +41,21 @@ function NewTaskForm({ addTask }) {
           className="new-todo"
           placeholder="What needs to be done?"
           name="query"
-          onChange={(e) => handleInput('title', e.target.value)}
+          onChange={(e) => setTitle(e.target.value)}
           onKeyUp={addTaskForm}
         />
         <input
           value={min}
           className="new-todo-form__timer"
           placeholder="Min"
-          onChange={(e) => handleInput('min', e.target.value)}
+          onChange={(e) => handleInputTime('min', e.target.value)}
           onKeyUp={addTaskForm}
         />
         <input
           value={sec}
           className="new-todo-form__timer"
           placeholder="Sec"
-          onChange={(e) => handleInput('sec', e.target.value)}
+          onChange={(e) => handleInputTime('sec', e.target.value)}
           onKeyUp={addTaskForm}
         />
       </form>
@@ -70,4 +63,7 @@ function NewTaskForm({ addTask }) {
   );
 }
 
+NewTaskForm.propTypes = {
+  addTask: PropTypes.func.isRequired,
+};
 export default NewTaskForm;

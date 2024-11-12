@@ -1,38 +1,28 @@
 import './App.css';
 import { useState } from 'react';
+import { uniqueId } from 'lodash';
 
 import NewTaskForm from './components/new-task-form';
 import Footer from './components/footer';
 import TaskList from './components/task-list';
 
 function App() {
-  const [maxId, setMaxId] = useState(1);
   const [tasks, setTasks] = useState([]);
-
-  const [filters, setFilters] = useState([
-    { isActive: true, name: 'All' },
-    { isActive: false, name: 'Active' },
-    { isActive: false, name: 'Completed' },
-  ]);
+  const [currentFilter, setFilter] = useState('All');
 
   const tasksToDo = tasks.filter((task) => !task.isDone);
 
   const addTask = (task) => {
-    const currentFilter = filters[filters.findIndex((filter) => filter.isActive)];
     const createdDate = new Date();
-    const min = task.min ? task.min * 60 : 0;
-    const sec = task.sec ? task.sec : 0;
+
     const newTask = {
       description: task.title,
       isDone: false,
-      id: maxId,
-      hide: currentFilter.name === 'Completed',
+      id: uniqueId('task_'),
       date: createdDate,
-      timerValue: min + sec,
-      play: false,
+      timerValue: task.sec,
     };
 
-    setMaxId(maxId + 1);
     setTasks([...tasks, newTask]);
   };
 
@@ -51,36 +41,25 @@ function App() {
     setTasks(updatedTasks);
   };
 
-  const togglePlayState = (id) => {
-    const updatedTasks = tasks.map((task) => (task.id === id ? { ...task, play: !task.play } : task));
+  const editTask = (id, newDescription) => {
+    const updatedTasks = tasks.map((task) => (task.id === id ? { ...task, description: newDescription } : task));
     setTasks(updatedTasks);
-  };
-
-  const filterTasks = (cond) => {
-    const filteredTasks = tasks.map((task) => {
-      let toHide = false;
-      if (cond !== 'All') {
-        toHide = cond === 'Active' ? task.isDone : !task.isDone;
-      }
-      const updTask = { ...task, hide: toHide };
-
-      return updTask;
-    });
-
-    const updFilters = filters.map((filter) => ({ ...filter, isActive: filter.name === cond }));
-
-    setFilters(updFilters);
-    setTasks(filteredTasks);
   };
 
   return (
     <section className="todoapp">
       <NewTaskForm addTask={addTask} />
       <section className="main">
-        <TaskList tasks={tasks} removeTask={removeTask} changeTaskState={changeTaskState} play={togglePlayState} />
+        <TaskList
+          tasks={tasks}
+          removeTask={removeTask}
+          changeTaskState={changeTaskState}
+          filter={currentFilter}
+          editTask={editTask}
+        />
         <Footer
-          filters={filters}
-          filterTasks={filterTasks}
+          currentFilter={currentFilter}
+          setFilter={setFilter}
           removeCompleted={removeCompleted}
           tasksCount={tasksToDo.length}
         />
