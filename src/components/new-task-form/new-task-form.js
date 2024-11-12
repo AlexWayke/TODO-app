@@ -11,7 +11,7 @@ function NewTaskForm({ addTask }) {
 
     if (title && event.key === 'Enter') {
       addTask({
-        title: title,
+        title,
         sec: min * 60 + sec,
       });
 
