@@ -1,13 +1,12 @@
 import { formatDistanceToNowStrict, intervalToDuration } from 'date-fns';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 
 function Task({ data, removeTask, changeTaskState, filter, editTask }) {
-  const { description, isDone, id, date, timerValue } = data;
+  const { description, isDone, id, date, timerValue = 0 } = data;
   const [timer, setTimer] = useState(timerValue);
   const [play, setPlay] = useState(false);
   const [isEditing, setEditing] = useState(false);
-  const [editField, setEditField] = useState('');
 
   const formatTime = (num) => (num > 9 ? num : `0${num}`);
   const minutes = intervalToDuration({ start: 0, end: timer * 1000 });
@@ -15,10 +14,14 @@ function Task({ data, removeTask, changeTaskState, filter, editTask }) {
 
   const toHide = (filter === 'Active' && isDone) || (filter === 'Completed' && !isDone);
 
+  const inputEl = useRef(null);
+
   const handleEditInput = (event) => {
-    if (editField && event.key === 'Enter') {
-      editTask(id, editField);
-      setEditField('');
+    if (inputEl.current.value && event.key === 'Enter') {
+      editTask(id, inputEl.current.value);
+      setEditing(false);
+    } else if (event.key === 'Escape') {
+      inputEl.current.value = description;
       setEditing(false);
     }
   };
@@ -32,6 +35,19 @@ function Task({ data, removeTask, changeTaskState, filter, editTask }) {
 
     return () => clearInterval(timerCheck);
   }, [timer, play, isDone]);
+
+  useEffect(() => {
+    const clickOutOfInput = (event) => {
+      if (inputEl.current && !inputEl.current.contains(event.target)) {
+        setEditing(false);
+        inputEl.current.value = description;
+      }
+    };
+    document.addEventListener('mousedown', clickOutOfInput);
+    return () => {
+      document.removeEventListener('mousedown', clickOutOfInput);
+    };
+  }, [description, isEditing]);
 
   return (
     <li className={(isDone ? 'completed ' : '') + (toHide ? 'hidden ' : '') + (isEditing ? 'editing' : '')}>
@@ -59,8 +75,11 @@ function Task({ data, removeTask, changeTaskState, filter, editTask }) {
       <input
         type="text"
         className="edit"
-        value={editField}
-        onChange={(e) => setEditField(e.target.value)}
+        ref={inputEl}
+        defaultValue={description}
+        onChange={(e) => {
+          inputEl.current.value = e.target.value;
+        }}
         onKeyUp={handleEditInput}
       />
     </li>
